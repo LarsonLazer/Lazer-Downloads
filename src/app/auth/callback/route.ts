@@ -1,0 +1,18 @@
+import { NextResponse, type NextRequest } from 'next/server';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+
+export async function GET(request: NextRequest) {
+  const requestUrl = new URL(request.url);
+  const code = requestUrl.searchParams.get('code');
+  const next = requestUrl.searchParams.get('next') || '/conta';
+
+  if (code) {
+    const supabase = await createServerSupabaseClient();
+    if (supabase) {
+      await supabase.auth.exchangeCodeForSession(code);
+    }
+  }
+
+  const safeNext = next.startsWith('/') ? next : '/conta';
+  return NextResponse.redirect(new URL(safeNext, requestUrl.origin));
+}
