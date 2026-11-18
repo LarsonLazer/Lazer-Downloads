@@ -10,9 +10,11 @@ type AuthMode = 'login' | 'register' | 'reset';
 
 export function AuthForm({
   supabaseConfigured,
+  schemaReady = true,
   redirectTo = '/admin',
 }: {
   supabaseConfigured: boolean;
+  schemaReady?: boolean;
   redirectTo?: string;
 }) {
   const router = useRouter();
@@ -129,7 +131,7 @@ export function AuthForm({
 
   return (
     <div className="rounded-2xl border border-white/10 bg-[#151B23] p-6 sm:p-8 space-y-6">
-      {!supabaseConfigured && (
+      {!supabaseConfigured ? (
         <div className="rounded-xl border border-amber-500/40 bg-[#0B0F14] p-4 text-xs text-amber-200 leading-relaxed">
           <p className="font-semibold text-amber-400 mb-1">Supabase ainda não ligado</p>
           <p>
@@ -139,7 +141,15 @@ export function AuthForm({
             <code>supabase/schema.sql</code> para ativar login, painel admin e armazenamento.
           </p>
         </div>
-      )}
+      ) : !schemaReady ? (
+        <div className="rounded-xl border border-amber-500/40 bg-[#0B0F14] p-4 text-xs text-amber-200 leading-relaxed">
+          <p className="font-semibold text-amber-400 mb-1">Base de dados pronta para migração</p>
+          <p>
+            O projeto Supabase está ligado, mas as tabelas ainda não foram criadas. Copia e executa o ficheiro{' '}
+            <code>supabase/schema.sql</code> no <strong>SQL Editor</strong> do Supabase antes de criar contas.
+          </p>
+        </div>
+      ) : null}
 
       <div className="flex items-center gap-1 rounded-lg bg-[#0B0F14] p-1 border border-white/10">
         <button

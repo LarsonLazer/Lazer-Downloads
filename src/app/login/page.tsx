@@ -25,14 +25,17 @@ export default async function LoginPage({
   const redirectParam = typeof sp.redirect === 'string' ? sp.redirect : '/admin';
   const configured = isSupabaseConfigured();
 
+  let schemaReady = false;
   if (configured) {
     try {
       const supabase = await createServerSupabaseClient();
       if (supabase) {
+        const { error: schemaError } = await supabase.from('profiles').select('id').limit(1);
+        schemaReady = !schemaError;
         const {
           data: { user },
         } = await supabase.auth.getUser();
-        if (user) {
+        if (user && schemaReady) {
           const { data: profile } = await supabase
             .from('profiles')
             .select('role, active')
@@ -57,7 +60,11 @@ export default async function LoginPage({
         </p>
       </div>
 
-      <AuthForm supabaseConfigured={configured} redirectTo={redirectParam} />
+      <AuthForm
+        supabaseConfigured={configured}
+        schemaReady={schemaReady}
+        redirectTo={redirectParam}
+      />
     </div>
   );
 }
