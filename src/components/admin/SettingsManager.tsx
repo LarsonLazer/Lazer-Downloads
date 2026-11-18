@@ -152,7 +152,7 @@ export function SettingsManager({ initialSettings }: { initialSettings: SiteSett
 
           <div className="space-y-1.5">
             <label className="block text-xs font-medium text-[#A0AAB5]">
-              Google Analytics ID (ex: G-XXXXXXXXXX)
+              Google Tag / Analytics ID (ex: GTM-5GPTFGQV ou G-XXXXXXXXXX)
             </label>
             <input
               type="text"

@@ -38,6 +38,7 @@ export async function getPublicSettings(): Promise<SiteSettings> {
     return {
       ...DEFAULT_SITE_SETTINGS,
       ...val,
+      ga_measurement_id: val.ga_measurement_id || DEFAULT_SITE_SETTINGS.ga_measurement_id,
       social_links: {
         ...DEFAULT_SITE_SETTINGS.social_links,
         ...(val.social_links || {}),

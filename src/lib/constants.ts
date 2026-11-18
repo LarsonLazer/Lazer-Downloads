@@ -10,7 +10,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   logo_url: '/logo-dark.svg',
   security_notice:
     'Todos os ficheiros e links passam por verificação administrativa antes da publicação. Recomenda-se manter o antivírus ativo ao executar ficheiros externos.',
-  ga_measurement_id: process.env.NEXT_PUBLIC_GA_ID || '',
+  ga_measurement_id: process.env.NEXT_PUBLIC_GA_ID || 'GTM-5GPTFGQV',
   adsense_client_id: '',
   social_links: {
     github: '',

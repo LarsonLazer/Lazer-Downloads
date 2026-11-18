@@ -413,7 +413,7 @@ insert into public.site_settings (key, value) values
     "contact_email": "contacto@lazerempresas.com",
     "logo_url": "/logo-dark.svg",
     "security_notice": "Todos os ficheiros e links passam por verificação administrativa antes da publicação. Recomenda-se manter o antivírus ativo ao executar ficheiros externos.",
-    "ga_measurement_id": "",
+    "ga_measurement_id": "GTM-5GPTFGQV",
     "adsense_client_id": "",
     "social_links": {
       "github": "",
