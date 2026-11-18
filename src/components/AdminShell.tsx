@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import {
   ExternalLink,
   FolderKanban,
@@ -33,19 +33,21 @@ export function AdminShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
   const { showToast } = useToast();
   const [signingOut, setSigningOut] = useState(false);
 
   const handleSignOut = async () => {
     setSigningOut(true);
-    const supabase = createClient();
-    if (supabase) {
-      await supabase.auth.signOut();
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      const supabase = createClient();
+      if (supabase) {
+        await supabase.auth.signOut().catch(() => null);
+      }
+    } finally {
+      showToast('Sessão de administrador terminada.', 'info');
+      window.location.assign('/');
     }
-    showToast('Sessão de administrador terminada.', 'info');
-    router.push('/');
-    router.refresh();
   };
 
   return (

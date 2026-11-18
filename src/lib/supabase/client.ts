@@ -15,7 +15,14 @@ export function createClient(): SupabaseClient | null {
   }
 
   if (!browserClient) {
-    browserClient = createBrowserClient(url, key);
+    const isHttps =
+      typeof window !== 'undefined' && window.location.protocol === 'https:';
+
+    browserClient = createBrowserClient(url, key, {
+      cookieOptions: isHttps
+        ? { path: '/', sameSite: 'none', secure: true }
+        : { path: '/', sameSite: 'lax', secure: false },
+    });
   }
   return browserClient;
 }

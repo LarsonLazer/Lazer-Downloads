@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Bookmark, History, LogOut, ShieldCheck, User } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
@@ -20,19 +19,21 @@ export function AccountClient({
   favorites: DownloadItem[];
   history: DownloadEvent[];
 }) {
-  const router = useRouter();
   const { showToast } = useToast();
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = async () => {
     setLoggingOut(true);
-    const supabase = createClient();
-    if (supabase) {
-      await supabase.auth.signOut();
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      const supabase = createClient();
+      if (supabase) {
+        await supabase.auth.signOut().catch(() => null);
+      }
+    } finally {
+      showToast('Sessão terminada.', 'info');
+      window.location.assign('/');
     }
-    showToast('Sessão terminada.', 'info');
-    router.push('/');
-    router.refresh();
   };
 
   return (

@@ -5,6 +5,7 @@ import {
   getSupabaseUrl,
   isSupabaseConfigured,
 } from './config';
+import { getServerCookieOptions, isRequestHttps } from './cookies';
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -13,7 +14,11 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
+  const isHttps = isRequestHttps(request.headers, request.nextUrl.protocol);
+  const cookieOptions = getServerCookieOptions(isHttps);
+
   const supabase = createServerClient(getSupabaseUrl(), getSupabasePublishableKey(), {
+    cookieOptions,
     cookies: {
       getAll() {
         return request.cookies.getAll();
@@ -22,7 +27,10 @@ export async function updateSession(request: NextRequest) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
         supabaseResponse = NextResponse.next({ request });
         cookiesToSet.forEach(({ name, value, options }) =>
-          supabaseResponse.cookies.set(name, value, options)
+          supabaseResponse.cookies.set(name, value, {
+            ...options,
+            ...cookieOptions,
+          })
         );
       },
     },
