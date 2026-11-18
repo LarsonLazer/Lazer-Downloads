@@ -33,8 +33,10 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
+  const isAdminRoute = pathname === '/admin' || pathname.startsWith('/admin/');
+  const isAccountRoute = pathname === '/conta' || pathname.startsWith('/conta/');
 
-  if (pathname.startsWith('/admin') || pathname.startsWith('/conta')) {
+  if (isAdminRoute || isAccountRoute) {
     if (!user) {
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = '/login';
@@ -42,7 +44,7 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    if (pathname.startsWith('/admin')) {
+    if (isAdminRoute) {
       const { data: profile } = await supabase
         .from('profiles')
         .select('role, active')

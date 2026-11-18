@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const configured = isSupabaseConfigured();
   let schemaReady = false;
